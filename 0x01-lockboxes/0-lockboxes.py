@@ -1,16 +1,65 @@
 #!/usr/bin/python3
-"""Lock Boxes Algorithm"""
+"""This module solve the lock puzzle box"""
+
+
+def look_next_opened_box(opened_boxes):
+    """check for the availability o f next open box
+    Args:
+        opened_boxes (dict): Dictionary which contains boxes already opened
+    Returns:
+        list: List with the keys that contained in the opened box
+    """
+    for i, box in opened_boxes.items():
+        if box.get('status') == 'opened':
+            box['status'] = 'opened/checked'
+            return box.get('keys')
+    return None
 
 
 def canUnlockAll(boxes):
-   """Implement of Lock box Algo."""
-    unlocked = [0]
-    for bxd, box in enumerate(boxes):
-        if not box:
+    """Check for possibility of box opening
+    Args:
+        boxes (list): List which contain all the boxes with the keys
+    Returns:
+        bool: True  if all can be opened else return false
+    """
+    if len(boxes) <= 1 or boxes == [[]]:
+        return True
+
+    aux = {}
+    while True:
+        if len(aux) == 0:
+            aux[0] = {
+                'status': 'opened',
+                'keys': boxes[0],
+            }
+        keys = look_next_opened_box(aux)
+        if keys:
+            for key in keys:
+                try:
+                    if aux.get(key) and aux.get(key).get('status') \
+                       == 'opened/checked':
+                        continue
+                    aux[key] = {
+                        'status': 'opened',
+                        'keys': boxes[key]
+                    }
+                except (KeyError, IndexError):
+                    continue
+        elif 'opened' in [box.get('status') for box in aux.values()]:
             continue
-        for key in box:
-            if key < len(boxes) and key not in unlocked and key != bxd:
-                unlocked.append(key)
-    if len(unlocked) == len(boxes):
-            return True
-    return False
+        elif len(aux) == len(boxes):
+            break
+        else:
+            return False
+
+    return len(aux) == len(boxes)
+
+
+def main():
+    """Entry point"""
+    canUnlockAll([[]])
+
+
+if __name__ == '__main__':
+    main()
