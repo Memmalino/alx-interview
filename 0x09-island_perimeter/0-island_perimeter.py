@@ -14,7 +14,7 @@ def island_perimeter(grid):
                 # left and right
                 if land_idx == 0:
                     # left side
-                    countng += 1
+                    counting += 1
 
                     # right side
                     if lst[land_idx + 1] == 0:
@@ -59,4 +59,4 @@ def island_perimeter(grid):
                     if grid[lst_idx + 1][land_idx] == 0:
                         counting += 1
 
-    return counter
+    return counting
